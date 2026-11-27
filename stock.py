@@ -61,12 +61,15 @@ def send_telegram(message):
         data=data,
         timeout=20
     )
-    response.raise_for_status()
 
     result = response.json()
 
-    if not result.get("ok"):
-        raise ValueError(f"Telegram 傳送失敗：{result}")
+    if not response.ok or not result.get("ok"):
+        raise RuntimeError(
+            f"Telegram 傳送失敗：{result.get('description', result)}"
+        )
+
+    print("Telegram 訊息傳送成功！")
 
 
 def main():
